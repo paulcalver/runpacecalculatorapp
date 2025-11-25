@@ -1,6 +1,7 @@
 import SwiftUI
 import UIKit
 
+
 struct ContentView: View {
     private func setWindowBackgroundToMatchApp() {
         let uiColor = UIColor(hue: CGFloat(120.0/360.0), saturation: 0.6, brightness: 0.6, alpha: 1.0)
