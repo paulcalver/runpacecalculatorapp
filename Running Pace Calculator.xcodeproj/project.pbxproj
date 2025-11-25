@@ -8,6 +8,7 @@
 
 /* Begin PBXFileReference section */
 		0DE8AA9C2ED63FC400566F58 /* Running Pace Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Running Pace Calculator.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0DE8AAC62ED640BB00566F58 /* StoreKit.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; name = StoreKit.storekit; path = "Running Pace Calculator/StoreKit.storekit"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,6 +33,7 @@
 		0DE8AA932ED63FC400566F58 = {
 			isa = PBXGroup;
 			children = (
+				0DE8AAC62ED640BB00566F58 /* StoreKit.storekit */,
 				0DE8AA9E2ED63FC400566F58 /* Running Pace Calculator */,
 				0DE8AA9D2ED63FC400566F58 /* Products */,
 			);
