@@ -11,6 +11,7 @@ struct PacePickerView: View {
     @State private var minutes: Int = 0
     @State private var seconds: Int = 0
     @State private var selectedUnit: DistanceUnit
+    @State private var prewarmPickers: Bool = true
 
     init(
         secondsPerUnit: TimeInterval,
@@ -27,68 +28,106 @@ struct PacePickerView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 16) {
+        ZStack {
+            NavigationStack {
+                VStack(spacing: 16) {
 
-                Text("Pace")
-                    .font(.myInputHeadline)
-                    .padding(.top, 12)
+                    Text("Pace")
+                        .font(.myInputHeadline)
+                        .padding(.top, 12)
 
-                // Wheels: minutes | seconds | unit
-                HStack {
+                    // Wheels: minutes | seconds | unit
+                    HStack {
 
-                    // Minutes wheel
-                    VStack(spacing: 4) {
-                        Picker("", selection: $minutes) {
-                            ForEach(0..<30) { m in
-                                Text(String(format: "%02d", m)).tag(m)
+                        // Minutes wheel
+                        VStack(spacing: 4) {
+                            Picker("", selection: $minutes) {
+                                ForEach(0..<30) { m in
+                                    Text(String(format: "%02d:", m)).tag(m)
+                                }
+                            }
+                            .frame(maxWidth: .infinity)
+                            .pickerStyle(.wheel)
+                        }
+
+                        // Seconds wheel
+                        VStack(spacing: 4) {
+                            Picker("", selection: $seconds) {
+                                ForEach(0..<60) { s in
+                                    Text(String(format: "%02d", s)).tag(s)
+                                }
+                            }
+                            .frame(maxWidth: .infinity)
+                            .pickerStyle(.wheel)
+                        }
+
+                        // Unit wheel
+                        VStack(spacing: 4) {
+                            Picker("", selection: $selectedUnit) {
+                                Text("/km").tag(DistanceUnit.kilometers)
+                                Text("/mi").tag(DistanceUnit.miles)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .pickerStyle(.wheel)
+                            .onChange(of: selectedUnit) {
+                                convertPace(to: selectedUnit)
+                                unit = selectedUnit
                             }
                         }
-                        .frame(maxWidth: .infinity)
-                        .pickerStyle(.wheel)
                     }
+                    .padding(.horizontal)
 
-                    // Seconds wheel
-                    VStack(spacing: 4) {
-                        Picker("", selection: $seconds) {
-                            ForEach(0..<60) { s in
-                                Text(String(format: "%02d", s)).tag(s)
-                            }
+                    Spacer()
+                }
+                .padding(.bottom, 12)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") {
+                            onCancel()
                         }
-                        .frame(maxWidth: .infinity)
-                        .pickerStyle(.wheel)
                     }
-
-                    // Unit wheel
-                    VStack(spacing: 4) {
-                        Picker("", selection: $selectedUnit) {
-                            Text("/km").tag(DistanceUnit.kilometers)
-                            Text("/mi").tag(DistanceUnit.miles)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .pickerStyle(.wheel)
-                        .onChange(of: selectedUnit) {
-                            convertPace(to: selectedUnit)
-                            unit = selectedUnit
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Done") {
+                            let finalSeconds = TimeInterval(minutes * 60 + seconds)
+                            onDone(finalSeconds)
                         }
                     }
                 }
-                .padding(.horizontal)
-
-                Spacer()
             }
-            .padding(.bottom, 12)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        onCancel()
+            if prewarmPickers {
+                HStack {
+                    // Minutes prewarm
+                    Picker("", selection: .constant(0)) {
+                        ForEach(0..<30) { m in
+                            Text(String(format: "%02d:", m))
+                        }
                     }
+                    .frame(maxWidth: .infinity)
+                    .pickerStyle(.wheel)
+
+                    // Seconds prewarm
+                    Picker("", selection: .constant(0)) {
+                        ForEach(0..<60) { s in
+                            Text(String(format: "%02d", s))
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .pickerStyle(.wheel)
+
+                    // Unit prewarm
+                    Picker("", selection: .constant(0)) {
+                        Text("/km")
+                        Text("/mi")
+                    }
+                    .frame(maxWidth: .infinity)
+                    .pickerStyle(.wheel)
                 }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") {
-                        let finalSeconds = TimeInterval(minutes * 60 + seconds)
-                        onDone(finalSeconds)
+                .opacity(0.01)
+                .allowsHitTesting(false)
+                .onAppear {
+                    DispatchQueue.main.async {
+                        prewarmPickers = false
                     }
                 }
             }

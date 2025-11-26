@@ -13,6 +13,7 @@ struct DistancePickerView: View {
     @State private var integerPart: Int = 0
     @State private var decimalPart: Int = 0
     @State private var valueInKm: Double = 0
+    @State private var prewarmPickers: Bool = true
 
     let presets: [(label: String, km: Double)] = [
         ("5k", 5.0),
@@ -22,85 +23,124 @@ struct DistancePickerView: View {
     ]
 
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 12) {
+        ZStack {
+            NavigationStack {
+                VStack(spacing: 12) {
 
-                Text(title)
-                    .font(.myInputHeadline)
-                    .padding(.top, 12)
+                    Text(title)
+                        .font(.myInputHeadline)
+                        .padding(.top, 12)
 
-                if showPresets {
-                    HStack(spacing: 10) {
-                        ForEach(presets, id: \.label) { preset in
-                            Button {
-                                valueInKm = preset.km
-                                updateWheelsFromKm()
-                                onDone(valueInKm / unit.distanceFactorToKm)
-                            } label: {
-                                Text(preset.label)
-                                    .font(.myInput)
-                                    .padding(.vertical, 6)
-                                    .padding(.horizontal, 12)
-                                    .background(Color(.systemGray5))
-                                    .clipShape(Capsule())
+                    if showPresets {
+                        HStack(spacing: 10) {
+                            ForEach(presets, id: \.label) { preset in
+                                Button {
+                                    valueInKm = preset.km
+                                    updateWheelsFromKm()
+                                    onDone(valueInKm / unit.distanceFactorToKm)
+                                } label: {
+                                    Text(preset.label)
+                                        .font(.myInput)
+                                        .padding(.vertical, 6)
+                                        .padding(.horizontal, 12)
+                                        .background(Color(.systemGray5))
+                                        .clipShape(Capsule())
+                                }
                             }
                         }
                     }
-                }
 
-                HStack {
-                    Picker("", selection: $integerPart) {
-                        ForEach(0..<101) { i in
-                            Text("\(i)").tag(i)
+                    HStack {
+                        Picker("", selection: $integerPart) {
+                            ForEach(0..<101) { i in
+                                Text("\(i)").tag(i)
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .pickerStyle(.wheel)
+                        .onChange(of: integerPart) {
+                            updateKmFromWheels()
+                        }
+
+                        Picker("", selection: $decimalPart) {
+                            ForEach(0..<10) { d in
+                                Text(".\(d)").tag(d)
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .pickerStyle(.wheel)
+                        .onChange(of: decimalPart) {
+                            updateKmFromWheels()
+                        }
+
+                        Picker("", selection: $unit) {
+                            Text("km").tag(DistanceUnit.kilometers)
+                            Text("mi").tag(DistanceUnit.miles)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .pickerStyle(.wheel)
+                        .onChange(of: unit) {
+                            updateWheelsFromKm()
                         }
                     }
-                    .frame(maxWidth: .infinity)
-                    .pickerStyle(.wheel)
-                    .onChange(of: integerPart) {
-                        updateKmFromWheels()
-                    }
+                    .padding(.horizontal)
 
-                    Picker("", selection: $decimalPart) {
-                        ForEach(0..<10) { d in
-                            Text(".\(d)").tag(d)
+                    Spacer()
+                }
+                .padding(.bottom, 12)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") {
+                            onCancel()
                         }
                     }
-                    .frame(maxWidth: .infinity)
-                    .pickerStyle(.wheel)
-                    .onChange(of: decimalPart) {
-                        updateKmFromWheels()
-                    }
-
-                    Picker("", selection: $unit) {
-                        Text("km").tag(DistanceUnit.kilometers)
-                        Text("mi").tag(DistanceUnit.miles)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .pickerStyle(.wheel)
-                    .onChange(of: unit) {
-                        updateWheelsFromKm()
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Done") {
+                            onDone(valueInKm / unit.distanceFactorToKm)
+                        }
                     }
                 }
-                .padding(.horizontal)
-
-                Spacer()
             }
-            .padding(.bottom, 12)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        onCancel()
+            .onAppear { initialise() }
+            
+            if prewarmPickers {
+                HStack {
+                    // Integer prewarm
+                    Picker("", selection: .constant(0)) {
+                        ForEach(0..<101) { i in
+                            Text("\(i)")
+                        }
                     }
+                    .frame(maxWidth: .infinity)
+                    .pickerStyle(.wheel)
+
+                    // Decimal prewarm
+                    Picker("", selection: .constant(0)) {
+                        ForEach(0..<10) { d in
+                            Text(".\(d)")
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .pickerStyle(.wheel)
+
+                    // Unit prewarm
+                    Picker("", selection: .constant(0)) {
+                        Text("km")
+                        Text("mi")
+                    }
+                    .frame(maxWidth: .infinity)
+                    .pickerStyle(.wheel)
                 }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") {
-                        onDone(valueInKm / unit.distanceFactorToKm)
+                .opacity(0.01)
+                .allowsHitTesting(false)
+                .onAppear {
+                    DispatchQueue.main.async {
+                        prewarmPickers = false
                     }
                 }
             }
         }
-        .onAppear { initialise() }
     }
 
     // MARK: - Helpers
