@@ -31,8 +31,8 @@ enum DistanceUnit: String, CaseIterable, Identifiable {
 
 class PaceViewModel: ObservableObject {
     // core inputs (stored in km + seconds)
-    @Published var distance: Double = 0
-    @Published var duration: TimeInterval = 0
+    @Published var distance: Double = 0 { didSet { if distance != oldValue { recomputeUsingStoredPaceIfPossible() } } }
+    @Published var duration: TimeInterval = 0 { didSet { if duration != oldValue { recomputeUsingStoredPaceIfPossible() } } }
     
     /// Global unit for distance / pace / speed
     @Published var unit: DistanceUnit = .kilometers {
@@ -52,6 +52,12 @@ class PaceViewModel: ObservableObject {
     
     /// Split interval stored in km internally
     @Published var splitIntervalKm: Double = 1.0
+    
+    /// Stores the last entered pace in seconds per km (base). Optional so pace can be entered before distance/time.
+    @Published private var storedPaceSecondsPerKm: Double?
+    /// Stores the last entered speed in km/h (base). Optional so speed can be entered before distance/time.
+    @Published private var storedSpeedKmh: Double?
+    private var isResetting = false
     
     enum ActiveField {
         case distance, duration
@@ -94,8 +100,14 @@ class PaceViewModel: ObservableObject {
     
     /// Pace in **seconds per km** (base unit)
     var paceSecondsPerKm: Double? {
-        guard distance > 0, duration > 0 else { return nil }
-        return duration / distance
+        if distance > 0, duration > 0 {
+            return duration / distance
+        }
+        // Fallback to stored pace if user entered pace first
+        if let stored = storedPaceSecondsPerKm, stored > 0 {
+            return stored
+        }
+        return nil
     }
     
     /// Pace in **seconds per selected unit** (km or mile)
@@ -124,10 +136,22 @@ class PaceViewModel: ObservableObject {
     
     /// Speed in selected unit per hour
     var speedPerSelectedUnit: Double? {
-        guard duration > 0, distance > 0 else { return nil }
-        let hours = duration / 3600
-        let dist = distanceInSelectedUnit
-        return dist / hours
+        // If we can derive from distance and duration, prefer that
+        if duration > 0, distance > 0 {
+            let hours = duration / 3600
+            let dist = distanceInSelectedUnit
+            return dist / hours
+        }
+        // Fallback to stored speed if user entered speed first
+        if let kmh = storedSpeedKmh, kmh > 0 {
+            switch unit {
+            case .kilometers:
+                return kmh
+            case .miles:
+                return kmh / unit.distanceFactorToKm // convert km/h -> mi/h
+            }
+        }
+        return nil
     }
     
     var speedString: String {
@@ -137,32 +161,137 @@ class PaceViewModel: ObservableObject {
         return String(format: "%.1f %@/h", speed, unit.rawValue)
     }
     
+    /// Indicates whether the current visible pace comes from a direct user entry
+    /// rather than being derived from distance and duration.
+    var isPaceEnteredDirectly: Bool {
+        let hasDerived = distance > 0 && duration > 0
+        return !hasDerived && (storedPaceSecondsPerKm ?? 0) > 0
+    }
+
+    /// Indicates whether the current visible speed comes from a direct user entry
+    /// rather than being derived from distance and duration.
+    var isSpeedEnteredDirectly: Bool {
+        let hasDerived = distance > 0 && duration > 0
+        return !hasDerived && (storedSpeedKmh ?? 0) > 0
+    }
+    
     /// Called when the user inputs a pace value (in seconds per km or per mile)
     func setPacePerSelectedUnit(_ seconds: TimeInterval) {
         guard seconds > 0 else { return }
-        
-        let pacePerKm: Double
+
+        // Convert to base pace (sec per km) and store it so pace can exist without distance
         switch unit {
         case .kilometers:
-            pacePerKm = seconds            // user gave sec per km
+            storedPaceSecondsPerKm = seconds
         case .miles:
-            pacePerKm = seconds / unit.distanceFactorToKm
-            // user gave sec per mile → convert to sec per km
+            storedPaceSecondsPerKm = seconds / unit.distanceFactorToKm
         }
-        
+
+        guard let pacePerKm = storedPaceSecondsPerKm else { return }
+
+        // If distance is known, compute duration
         if distance > 0 {
             duration = (pacePerKm * distance).rounded()
+        }
+        // Else if duration is known, compute distance
+        else if duration > 0 {
+            let km = duration / pacePerKm
+            if km.isFinite, km > 0 {
+                distance = km
+            }
         }
     }
     
     /// Called when the user inputs a speed value (in km/h or mi/h)
     func setSpeedPerSelectedUnit(_ speed: Double) {
         guard speed > 0 else { return }
-        let dist = distanceInSelectedUnit
-        guard dist > 0 else { return }
-        
-        let hours = dist / speed
-        duration = (hours * 3600).rounded()
+
+        // Convert incoming speed to base km/h and store it
+        switch unit {
+        case .kilometers:
+            storedSpeedKmh = speed
+        case .miles:
+            storedSpeedKmh = speed * unit.distanceFactorToKm // mi/h -> km/h
+        }
+
+        guard let kmh = storedSpeedKmh else { return }
+
+        // If distance is known, compute duration
+        if distance > 0 {
+            let hours = (distance / kmh)
+            duration = (hours * 3600).rounded()
+        }
+        // Else if duration is known, compute distance
+        else if duration > 0 {
+            let hours = duration / 3600
+            let km = kmh * hours
+            if km.isFinite, km > 0 { distance = km }
+        }
+    }
+    
+    /// Recompute the missing variable if we have a stored pace and one of distance/duration changed.
+    func recomputeUsingStoredPaceIfPossible() {
+        if isResetting { return }
+
+        // Try with stored pace first
+        if let pacePerKm = storedPaceSecondsPerKm, pacePerKm > 0 {
+            if distance > 0 && (duration <= 0) {
+                duration = (pacePerKm * distance).rounded()
+                return
+            } else if duration > 0 && (distance <= 0) {
+                let km = duration / pacePerKm
+                if km.isFinite, km > 0 { distance = km }
+                return
+            }
+        }
+
+        // If pace wasn't applicable, try with stored speed
+        if let kmh = storedSpeedKmh, kmh > 0 {
+            if distance > 0 && (duration <= 0) {
+                let hours = distance / kmh
+                duration = (hours * 3600).rounded()
+                return
+            } else if duration > 0 && (distance <= 0) {
+                let hours = duration / 3600
+                let km = kmh * hours
+                if km.isFinite, km > 0 { distance = km }
+                return
+            }
+        }
+    }
+    
+    /// Called when the user inputs a pace (sec per km or mile) and a total duration
+    /// This computes and sets the distance (stored in km internally).
+    /// - Parameters:
+    ///   - paceSecondsPerSelectedUnit: Pace expressed in seconds per selected unit (km or mile depending on `unit`). Must be > 0.
+    ///   - duration: Total duration in seconds. Must be > 0.
+    func setDistanceFrom(paceSecondsPerSelectedUnit: TimeInterval, duration: TimeInterval) {
+        guard paceSecondsPerSelectedUnit > 0, duration > 0 else { return }
+
+        // Convert incoming pace to seconds per km (base)
+        let pacePerKm: Double
+        switch unit {
+        case .kilometers:
+            pacePerKm = paceSecondsPerSelectedUnit
+        case .miles:
+            // sec per mile -> sec per km
+            pacePerKm = paceSecondsPerSelectedUnit / unit.distanceFactorToKm
+        }
+
+        // distance (in km) = duration (sec) / (sec per km)
+        let km = duration / pacePerKm
+        guard km.isFinite, km > 0 else { return }
+
+        // Set model values (round duration to whole seconds like other setters)
+        self.duration = duration.rounded()
+        self.distance = km
+    }
+
+    /// Convenience to set distance from pace given as minutes and seconds per selected unit.
+    /// For example, 4 min 30 sec per km with a 45-minute duration.
+    func setDistanceFrom(paceMinutes: Int, paceSeconds: Int, totalDurationSeconds: TimeInterval) {
+        let totalPaceSeconds = TimeInterval(max(0, paceMinutes) * 60 + max(0, paceSeconds))
+        setDistanceFrom(paceSecondsPerSelectedUnit: totalPaceSeconds, duration: totalDurationSeconds)
     }
     
     // MARK: - Predicted / Equivalent times (Riegel)
@@ -266,10 +395,15 @@ class PaceViewModel: ObservableObject {
     // MARK: - Reset
     
     func reset() {
+        isResetting = true
+        // Clear stored pace first so didSet recomputes don't restore values
+        storedPaceSecondsPerKm = nil
+        storedSpeedKmh = nil
         distance = 0
         duration = 0
         splitIntervalKm = 1.0
         splitUnit = unit   // or .kilometers, up to you
+        isResetting = false
     }
 }
 
