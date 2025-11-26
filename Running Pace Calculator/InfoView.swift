@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct SettingsView: View {
+struct InfoView: View {
     @Environment(\.dismiss) private var dismiss
     @Binding var unit: DistanceUnit
     
@@ -122,3 +122,4 @@ struct SettingsView: View {
         }
     }
 }
+

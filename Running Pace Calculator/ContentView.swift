@@ -39,192 +39,196 @@ struct ContentView: View {
                     .ignoresSafeArea(.all)
                 
                 // MAIN CONTENT
-                ScrollView {
-                    VStack(spacing: 12) {
-                        
-                        // HEADER
-                        HStack(alignment: .firstTextBaseline) {
-                            Text("Running Pace\nCalculator")
-                                .font(.myTitle)
-                                .foregroundStyle(.primary)
-                                .lineLimit(2)
-                                //.minimumScaleFactor(0.8)
-                                .multilineTextAlignment(.leading)
-                                .alignmentGuide(.firstTextBaseline) { d in d[.top] }
-
-                            Spacer()
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        Color.clear.frame(height: 0).id("top")
+                        VStack(spacing: 12) {
                             
-                            Image("logo") // replace with your asset name
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 80, height: 80)
-                                .alignmentGuide(.firstTextBaseline) { d in d[.top] }
-                                .accessibilityHidden(true)
-                                .offset(y: -6)
-                        }
-                        .padding(.top, 24)
-                        .padding(.bottom, 8)
+                            // HEADER
+                            HStack(alignment: .firstTextBaseline) {
+                                Text("Running Pace\nCalculator")
+                                    .font(.myTitle)
+                                    .foregroundStyle(.primary)
+                                    .lineLimit(2)
+                                    //.minimumScaleFactor(0.8)
+                                    .multilineTextAlignment(.leading)
+                                    .alignmentGuide(.firstTextBaseline) { d in d[.top] }
 
-                        
-                        // ---------------------------------------------------
-                        // Distance
-                        // ---------------------------------------------------
-                        RowButton(
-                            label: nil,
-                            value: "\(vm.formattedDistance) \(vm.unit.rawValue)",
-                            systemImage: "ruler"
-                        ) {
-                            vm.activeField = .distance
-                            activeSheet = .distance
-                        }
-                        
-                        // ---------------------------------------------------
-                        // Time
-                        // ---------------------------------------------------
-                        RowButton(
-                            label: nil,
-                            value: vm.formattedDuration,
-                            systemImage: "clock"
-                        ) {
-                            vm.activeField = .duration
-                            activeSheet = .time
-                        }
-                        
-                        // ---------------------------------------------------
-                        // Pace
-                        // ---------------------------------------------------
-                        RowButton(
-                            label: nil,
-                            value: vm.paceString,
-                            systemImage: "figure.run"
-                        ) {
-                            activeSheet = .pace
-                        }
-                        
-                        // ---------------------------------------------------
-                        // Speed
-                        // ---------------------------------------------------
-                        RowButton(
-                            label: nil,
-                            value: vm.speedString,
-                            systemImage: "speedometer"
-                        ) {
-                            activeSheet = .speed
-                        }
-                        
-                        // ---------------------------------------------------
-                        // Splits every
-                        // ---------------------------------------------------
-                        RowButton(
-                            label: nil,
-                            value: "\(vm.splitIntervalString) \(vm.splitUnit.rawValue)",
-                            systemImage: "line.3.horizontal.decrease"
-                        ) {
-                            activeSheet = .split
-                        }
-                        
-                        
-                        // RESET BUTTON
-                        Button {
-                            vm.reset()
-                        } label: {
-                            HStack {
-                                Image(systemName: "arrow.counterclockwise")
-                                Text("Reset")
-                            }
-                            .font(.myInput)
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .background(
-                                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                    .fill(Color.black)
-                            )
-                        }
-                        .padding(.top, 0)
-                        
-                        
-                        // MARK: - Splits & Predictions
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Splits")
-                                .font(.myHeadline)
-                            
-                            if vm.splitRows.isEmpty {
-                                Text("Enter a distance and pace (or time) to see splits.")
-                                    .font(.myCaption)
-                                    .foregroundStyle(.secondary)
-                            } else {
-                                HStack(alignment: .top, spacing: 40) {
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text(vm.splitUnit == .kilometers ? "Km" : "Mi")
-                                            .font(.myHeadline)
-                                            .foregroundStyle(.primary)
-                                        ForEach(vm.splitRows) { row in
-                                            Text(row.distanceDisplay)
-                                        }
-                                    }
-
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text("Time")
-                                            .font(.myHeadline)
-                                            .foregroundStyle(.primary)
-                                        ForEach(vm.splitRows) { row in
-                                            Text(row.durationDisplay)
-                                        }
-                                    }
-
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text("Halfway (\(halfwayDistanceString())) Split")
-                                            .font(.myHeadline)
-                                            .foregroundStyle(.primary)
-                                        Text(halfwayTimeString(vm.duration))
-                                    }
-                                }
-                                .font(.myCaption)
-                            }
-                            
-                            Text("Predictive Equivalents")
-                                .font(.myHeadline)
-                                .padding(.top, 8)
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("5k – \(vm.predictedEquivalentTime(for: 5))")
-                                Text("10k – \(vm.predictedEquivalentTime(for: 10))")
-                                Text("Half Marathon – \(vm.predictedEquivalentTime(for: 21.097))")
-                                Text("Marathon – \(vm.predictedEquivalentTime(for: 42.195))")
-                            }
-                            .font(.myCaption)
-                            .foregroundStyle(.primary)
-                            Text("Calculated using the Riegel Formula, based on your selected pace and distance combination.")
-                                .font(.myCaption)
-                                .foregroundStyle(.secondary)
-                                //.padding(.top, 8)
-                            Text("Support the App")
-                                .font(.myHeadline)
-                                .padding(.top, 8)
-                            Button {
-                                path.append(.settings)
-                            } label: {
-                                Image(systemName: "info.circle")
+                                Spacer()
+                                
+                                Image("logo") // replace with your asset name
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 32, height: 32)
-                                    .foregroundStyle(.primary)
-                                    .padding(.vertical, 8)
+                                    .frame(width: 80, height: 80)
+                                    .alignmentGuide(.firstTextBaseline) { d in d[.top] }
+                                    .accessibilityHidden(true)
+                                    .offset(y: -6)
                             }
-                            .buttonStyle(.plain)
+                            .padding(.top, 24)
+                            .padding(.bottom, 8)
+
+                            
+                            // ---------------------------------------------------
+                            // Distance
+                            // ---------------------------------------------------
+                            RowButton(
+                                label: nil,
+                                value: "\(vm.formattedDistance) \(vm.unit.rawValue)",
+                                systemImage: "ruler"
+                            ) {
+                                vm.activeField = .distance
+                                activeSheet = .distance
+                            }
+                            
+                            // ---------------------------------------------------
+                            // Time
+                            // ---------------------------------------------------
+                            RowButton(
+                                label: nil,
+                                value: vm.formattedDuration,
+                                systemImage: "clock"
+                            ) {
+                                vm.activeField = .duration
+                                activeSheet = .time
+                            }
+                            
+                            // ---------------------------------------------------
+                            // Pace
+                            // ---------------------------------------------------
+                            RowButton(
+                                label: nil,
+                                value: vm.paceString,
+                                systemImage: "figure.run"
+                            ) {
+                                activeSheet = .pace
+                            }
+                            
+                            // ---------------------------------------------------
+                            // Speed
+                            // ---------------------------------------------------
+                            RowButton(
+                                label: nil,
+                                value: vm.speedString,
+                                systemImage: "speedometer"
+                            ) {
+                                activeSheet = .speed
+                            }
+                            
+                            // ---------------------------------------------------
+                            // Splits every
+                            // ---------------------------------------------------
+                            RowButton(
+                                label: nil,
+                                value: "\(vm.splitIntervalString) \(vm.splitUnit.rawValue)",
+                                systemImage: "line.3.horizontal.decrease"
+                            ) {
+                                activeSheet = .split
+                            }
+                            
+                            
+                            // RESET BUTTON
+                            Button {
+                                vm.reset()
+                                withAnimation { proxy.scrollTo("top", anchor: .top) }
+                            } label: {
+                                HStack {
+                                    Image(systemName: "arrow.counterclockwise")
+                                    Text("Reset")
+                                }
+                                .font(.myInput)
+                                .foregroundStyle(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 16)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                        .fill(Color.black)
+                                )
+                            }
+                            .padding(.top, 0)
+                            
+                            
+                            // MARK: - Splits & Predictions
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Splits")
+                                    .font(.myHeadline)
+                                
+                                if vm.splitRows.isEmpty {
+                                    Text("Enter a distance and pace (or time) to see splits.")
+                                        .font(.myCaption)
+                                        .foregroundStyle(.secondary)
+                                } else {
+                                    HStack(alignment: .top, spacing: 40) {
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text(vm.splitUnit == .kilometers ? "Km" : "Mi")
+                                                .font(.myHeadline)
+                                                .foregroundStyle(.primary)
+                                            ForEach(vm.splitRows) { row in
+                                                Text(row.distanceDisplay)
+                                            }
+                                        }
+
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text("Time")
+                                                .font(.myHeadline)
+                                                .foregroundStyle(.primary)
+                                            ForEach(vm.splitRows) { row in
+                                                Text(row.durationDisplay)
+                                            }
+                                        }
+
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text("Halfway (\(halfwayDistanceString())) Split")
+                                                .font(.myHeadline)
+                                                .foregroundStyle(.primary)
+                                            Text(halfwayTimeString(vm.duration))
+                                        }
+                                    }
+                                    .font(.myCaption)
+                                }
+                                
+                                Text("Predictive Equivalents")
+                                    .font(.myHeadline)
+                                    .padding(.top, 8)
+                                
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("5k – \(vm.predictedEquivalentTime(for: 5))")
+                                    Text("10k – \(vm.predictedEquivalentTime(for: 10))")
+                                    Text("Half Marathon – \(vm.predictedEquivalentTime(for: 21.097))")
+                                    Text("Marathon – \(vm.predictedEquivalentTime(for: 42.195))")
+                                }
+                                .font(.myCaption)
+                                .foregroundStyle(.primary)
+                                Text("Calculated using the Riegel Formula, based on your selected pace and distance combination.")
+                                    .font(.myCaption)
+                                    .foregroundStyle(.secondary)
+                                    //.padding(.top, 8)
+                                Text("Support the App")
+                                    .font(.myHeadline)
+                                    .padding(.top, 8)
+                                Button {
+                                    path.append(.settings)
+                                } label: {
+                                    Image(systemName: "chevron.right.circle")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 32, height: 32)
+                                        .foregroundStyle(.primary)
+                                        .padding(.vertical, 8)
+                                }
+                                .buttonStyle(.plain)
+                            }
+                            
+                            
+                            .frame(maxWidth: .infinity, alignment: .leading)   // <-- key line
+                                                                
+                            .padding(.top, 8)
+                            .padding(.bottom, 24)
+                            
                         }
-                        
-                        
-                        .frame(maxWidth: .infinity, alignment: .leading)   // <-- key line
-                                                            
-                        .padding(.top, 8)
-                        .padding(.bottom, 24)
-                        
+                        .frame(maxWidth: .infinity, alignment: .leading)    // << bonus-tip alignment
+                        .padding(.horizontal, 24)                           // << double border left/right
+                        .padding(.vertical, 20)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)    // << bonus-tip alignment
-                    .padding(.horizontal, 24)                           // << double border left/right
-                    .padding(.vertical, 20)
                 }
             }
             
@@ -240,8 +244,8 @@ struct ContentView: View {
             .navigationDestination(for: Route.self) { route in
                 switch route {
                 case .settings:
-                    SettingsView(unit: $vm.unit)
-                        .navigationTitle("Settings")
+                    InfoView(unit: $vm.unit)
+                        .navigationTitle("Info")
                         .navigationBarTitleDisplayMode(.inline)
                 }
             }

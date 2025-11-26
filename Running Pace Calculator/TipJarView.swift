@@ -42,7 +42,7 @@ class TipJarViewModel: ObservableObject {
                 await transaction.finish()
                 
                 hasTipped = true
-                message = "Thank you for your tip!"
+                message = "Thank you!! ☺️"
                 
             case .userCancelled:
                 message = nil
@@ -105,7 +105,7 @@ struct TipJarView: View {
                     // SUCCESS MESSAGE
                     else if vm.hasTipped, let message = vm.message {
                         Text(message)
-                            .font(.myTitle)
+                            .font(.myCaption)
                             .multilineTextAlignment(.center)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top, 8)
