@@ -72,9 +72,15 @@ struct InfoView: View {
                     .buttonStyle(.plain)
                     
                     // Website info
-                    Text("For more info, or to get in touch, check out our website: https://apps.paulcalver.co")
+                    Text("For more info, or to get in touch, check out our website:")
                         .font(.myCaption)
                         .foregroundStyle(.primary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    // Website link
+                    Text("https://apps.paulcalver.co")
+                        .font(.myCaption)
+                        .foregroundStyle(.primary)
+                        .underline()
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
