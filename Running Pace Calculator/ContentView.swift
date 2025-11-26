@@ -53,19 +53,14 @@ struct ContentView: View {
                                 .alignmentGuide(.firstTextBaseline) { d in d[.top] }
 
                             Spacer()
-
-                            Button {
-                                path.append(.settings)
-                            } label: {
-                                Image(systemName: "mug.fill")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 40, height: 40)
-                                    .foregroundStyle(.primary)
-                                    .alignmentGuide(.firstTextBaseline) { d in d[.top] }
-                                    .offset(y: 8)
-                            }
-                            .buttonStyle(.plain)
+                            
+                            Image("logo") // replace with your asset name
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 80, height: 80)
+                                .alignmentGuide(.firstTextBaseline) { d in d[.top] }
+                                .accessibilityHidden(true)
+                                .offset(y: -6)
                         }
                         .padding(.top, 24)
                         .padding(.bottom, 8)
@@ -204,11 +199,27 @@ struct ContentView: View {
                                 .font(.myCaption)
                                 .foregroundStyle(.secondary)
                                 //.padding(.top, 8)
+                            Text("Support the App")
+                                .font(.myHeadline)
+                                .padding(.top, 8)
+                            Button {
+                                path.append(.settings)
+                            } label: {
+                                Image(systemName: "info.circle")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 32, height: 32)
+                                    .foregroundStyle(.primary)
+                                    .padding(.vertical, 8)
+                            }
+                            .buttonStyle(.plain)
                         }
+                        
+                        
                         .frame(maxWidth: .infinity, alignment: .leading)   // <-- key line
-                        //.padding(.leading, 16)                           // <-- uncomment this if you want the text
-                        //                                                    to align with the *inside* of the grey cards
-                        .padding(.top, 12)
+                                                            
+                        .padding(.top, 8)
+                        .padding(.bottom, 24)
                         
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)    // << bonus-tip alignment
@@ -375,4 +386,3 @@ struct ContentView: View {
         }
     }
 }
-
