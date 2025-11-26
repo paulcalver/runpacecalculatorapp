@@ -23,27 +23,11 @@ struct SettingsView: View {
                             .minimumScaleFactor(0.8)
 
                         Spacer()
-
-                        Button {
-                            dismiss()
-                        } label: {
-                            Image(systemName: "xmark")
-                                .font(.myIcon)
-                                .foregroundStyle(.primary)
-                                .offset(y: 0)
-                        }
-                        .buttonStyle(.plain)
                     }
                     .padding(.top, 24)
                     .padding(.bottom, 8)
                     
-                   
-                    
-                    // Support section
-//                    Text("A way to say thanks!")
-//                        .font(.myHeadline)
-//                        .foregroundStyle(.primary)
-//                        .frame(maxWidth: .infinity, alignment: .leading)
+                
                     
                     Text("If you find this app useful, please consider supporting it by leaving a tip in our tip jar, or sharing with a friend.")
                         .font(.myCaption)
@@ -59,7 +43,7 @@ struct SettingsView: View {
                             Spacer()
                             Image(systemName: "chevron.right")
                                 .font(.myCaption)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(.primary)
                         }
                         .padding()
                         .background(Color(.systemGray6))
@@ -79,7 +63,7 @@ struct SettingsView: View {
                             Spacer()
                             Image(systemName: "square.and.arrow.up")
                                 .font(.myCaption)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(.primary)
                         }
                         .padding()
                         .background(Color(.systemGray6))
@@ -99,7 +83,9 @@ struct SettingsView: View {
             .padding(.horizontal, 24)
             .padding(.vertical, 20)
         }
-        .toolbar(.hidden, for: .navigationBar)
+        .navigationTitle("")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(false)
         .background(
             Color(hue: 120.0/360.0, saturation: 0.6, brightness: 0.6)
                 .ignoresSafeArea()

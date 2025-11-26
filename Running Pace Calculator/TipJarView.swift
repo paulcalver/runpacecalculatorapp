@@ -93,7 +93,7 @@ struct TipJarView: View {
                         .font(.myTitle)
                         .foregroundColor(.primary)
                         .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity, alignment: .center)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.top, 24)       // MATCHES SETTINGS + CONTENT
                     
                     
@@ -107,7 +107,7 @@ struct TipJarView: View {
                         Text(message)
                             .font(.myTitle)
                             .multilineTextAlignment(.center)
-                            .frame(maxWidth: .infinity, alignment: .center)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top, 8)
                     }
                     

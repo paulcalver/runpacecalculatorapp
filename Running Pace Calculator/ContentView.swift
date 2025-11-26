@@ -229,7 +229,6 @@ struct ContentView: View {
             }
             
             
-            .toolbar(.hidden, for: .navigationBar)
             .background(
                 Color(hue: 120.0/360.0, saturation: 0.6, brightness: 0.6)
                     .ignoresSafeArea(.all)
@@ -242,6 +241,8 @@ struct ContentView: View {
                 switch route {
                 case .settings:
                     SettingsView(unit: $vm.unit)
+                        .navigationTitle("Settings")
+                        .navigationBarTitleDisplayMode(.inline)
                 }
             }
             
@@ -386,3 +387,4 @@ struct ContentView: View {
         }
     }
 }
+
