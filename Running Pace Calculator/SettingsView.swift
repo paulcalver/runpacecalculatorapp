@@ -46,7 +46,7 @@ struct SettingsView: View {
 //                        .frame(maxWidth: .infinity, alignment: .leading)
                     
                     Text("If you find this app useful, please consider supporting it by leaving a tip in our tip jar, or sharing with a friend.")
-                        .font(.myFootnote)
+                        .font(.myCaption)
                         .foregroundStyle(.primary)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
@@ -89,7 +89,7 @@ struct SettingsView: View {
                     
                     // Website info
                     Text("For more info, or to get in touch, check out our website: https://apps.paulcalver.co")
-                        .font(.myFootnote)
+                        .font(.myCaption)
                         .foregroundStyle(.primary)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }

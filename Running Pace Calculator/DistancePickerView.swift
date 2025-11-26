@@ -38,7 +38,7 @@ struct DistancePickerView: View {
                                 onDone(valueInKm / unit.distanceFactorToKm)
                             } label: {
                                 Text(preset.label)
-                                    .font(.subheadline)
+                                    .font(.myInput)
                                     .padding(.vertical, 6)
                                     .padding(.horizontal, 12)
                                     .background(Color(.systemGray5))

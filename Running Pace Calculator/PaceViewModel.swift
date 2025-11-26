@@ -71,10 +71,11 @@ class PaceViewModel: ObservableObject {
     }
     
     var formattedDuration: String {
-        guard duration > 0 else { return "00:00:00" }
-        let hrs = Int(duration) / 3600
-        let mins = (Int(duration) % 3600) / 60
-        let secs = Int(duration) % 60
+        let rounded = Int(duration.rounded())
+        guard rounded > 0 else { return "00:00:00" }
+        let hrs = rounded / 3600
+        let mins = (rounded % 3600) / 60
+        let secs = rounded % 60
         return String(format: "%02d:%02d:%02d", hrs, mins, secs)
     }
     
@@ -115,8 +116,9 @@ class PaceViewModel: ObservableObject {
         guard let pace = paceSecondsPerSelectedUnit else {
             return "0:00 /\(unit.rawValue)"
         }
-        let mins = Int(pace) / 60
-        let secs = Int(pace) % 60
+        let total = Int(pace.rounded())
+        let mins = total / 60
+        let secs = total % 60
         return String(format: "%d:%02d /%@", mins, secs, unit.rawValue)
     }
     
@@ -149,7 +151,7 @@ class PaceViewModel: ObservableObject {
         }
         
         if distance > 0 {
-            duration = pacePerKm * distance
+            duration = (pacePerKm * distance).rounded()
         }
     }
     
@@ -160,7 +162,7 @@ class PaceViewModel: ObservableObject {
         guard dist > 0 else { return }
         
         let hours = dist / speed
-        duration = hours * 3600
+        duration = (hours * 3600).rounded()
     }
     
     // MARK: - Predicted / Equivalent times (Riegel)
@@ -201,7 +203,7 @@ class PaceViewModel: ObservableObject {
             return "--:--"
         }
 
-        let totalSec = Int(secPerKm * distKm)
+        let totalSec = Int((secPerKm * distKm).rounded())
         let hrs = totalSec / 3600
         let mins = (totalSec % 3600) / 60
         let secs = totalSec % 60

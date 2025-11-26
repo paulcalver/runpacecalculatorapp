@@ -40,7 +40,7 @@ struct ContentView: View {
                 
                 // MAIN CONTENT
                 ScrollView {
-                    VStack(spacing: 16) {
+                    VStack(spacing: 12) {
                         
                         // HEADER
                         HStack(alignment: .firstTextBaseline) {
@@ -57,13 +57,13 @@ struct ContentView: View {
                             Button {
                                 path.append(.settings)
                             } label: {
-                                Image(systemName: "sparkles.2")
+                                Image(systemName: "mug.fill")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 28, height: 28)
+                                    .frame(width: 40, height: 40)
                                     .foregroundStyle(.primary)
                                     .alignmentGuide(.firstTextBaseline) { d in d[.top] }
-                                    .offset(y: 4)
+                                    .offset(y: 8)
                             }
                             .buttonStyle(.plain)
                         }
@@ -137,16 +137,16 @@ struct ContentView: View {
                                 Image(systemName: "arrow.counterclockwise")
                                 Text("Reset")
                             }
-                            .font(.myHeadline)
+                            .font(.myInput)
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
-                            .padding(.vertical, 12)
+                            .padding(.vertical, 16)
                             .background(
-                                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                RoundedRectangle(cornerRadius: 12, style: .continuous)
                                     .fill(Color.black)
                             )
                         }
-                        .padding(.top, 8)
+                        .padding(.top, 0)
                         
                         
                         // MARK: - Splits & Predictions
@@ -156,13 +156,13 @@ struct ContentView: View {
                             
                             if vm.splitRows.isEmpty {
                                 Text("Enter a distance and pace (or time) to see splits.")
-                                    .font(.myFootnote)
+                                    .font(.myCaption)
                                     .foregroundStyle(.secondary)
                             } else {
                                 HStack(alignment: .top, spacing: 40) {
                                     VStack(alignment: .leading, spacing: 4) {
                                         Text(vm.splitUnit == .kilometers ? "Km" : "Mi")
-                                            .font(.myFootnoteTitle)
+                                            .font(.myHeadline)
                                             .foregroundStyle(.primary)
                                         ForEach(vm.splitRows) { row in
                                             Text(row.distanceDisplay)
@@ -171,7 +171,7 @@ struct ContentView: View {
 
                                     VStack(alignment: .leading, spacing: 4) {
                                         Text("Time")
-                                            .font(.myFootnoteTitle)
+                                            .font(.myHeadline)
                                             .foregroundStyle(.primary)
                                         ForEach(vm.splitRows) { row in
                                             Text(row.durationDisplay)
@@ -180,12 +180,12 @@ struct ContentView: View {
 
                                     VStack(alignment: .leading, spacing: 4) {
                                         Text("Halfway (\(halfwayDistanceString())) Split")
-                                            .font(.myFootnoteTitle)
+                                            .font(.myHeadline)
                                             .foregroundStyle(.primary)
                                         Text(halfwayTimeString(vm.duration))
                                     }
                                 }
-                                .font(.myFootnote)
+                                .font(.myCaption)
                             }
                             
                             Text("Predictive Equivalents")
@@ -198,10 +198,10 @@ struct ContentView: View {
                                 Text("Half Marathon – \(vm.predictedEquivalentTime(for: 21.097))")
                                 Text("Marathon – \(vm.predictedEquivalentTime(for: 42.195))")
                             }
-                            .font(.myFootnote)
+                            .font(.myCaption)
                             .foregroundStyle(.primary)
                             Text("Calculated using the Riegel Formula, based on your selected pace and distance combination.")
-                                .font(.myFootnote)
+                                .font(.myCaption)
                                 .foregroundStyle(.secondary)
                                 //.padding(.top, 8)
                         }
@@ -352,7 +352,7 @@ struct ContentView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         if let label, !label.isEmpty {
                             Text(label)
-                                .font(.myCaption)
+                                .font(.myInput)
                                 .foregroundStyle(.secondary)
                         }
                         
@@ -364,7 +364,7 @@ struct ContentView: View {
                     Spacer()
                     
                     Image(systemName: "chevron.down")
-                        .font(.myCaption)
+                        .font(.myInput)
                         .foregroundStyle(.secondary)
                 }
                 .padding()

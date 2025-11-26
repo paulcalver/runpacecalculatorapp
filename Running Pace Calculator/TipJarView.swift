@@ -92,6 +92,8 @@ struct TipJarView: View {
                     Text("Tip Jar")
                         .font(.myTitle)
                         .foregroundColor(.primary)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.top, 24)       // MATCHES SETTINGS + CONTENT
                     
                     
@@ -105,6 +107,7 @@ struct TipJarView: View {
                         Text(message)
                             .font(.myTitle)
                             .multilineTextAlignment(.center)
+                            .frame(maxWidth: .infinity, alignment: .center)
                             .padding(.top, 8)
                     }
                     
@@ -112,7 +115,7 @@ struct TipJarView: View {
                     else {
                         if vm.products.isEmpty {
                             Text(vm.message ?? "Tips are not available right now.")
-                                .font(.myFootnote)
+                                .font(.myCaption)
                                 .multilineTextAlignment(.center)
                                 .padding(.top, 8)
                         } else {
@@ -124,7 +127,7 @@ struct TipJarView: View {
                                         Text(product.displayName)
                                         Spacer()
                                         Text(product.displayPrice)
-                                            .foregroundColor(.secondary)
+                                            .foregroundStyle(.primary)
                                     }
                                     .font(.myInput)
                                     .padding()
@@ -137,7 +140,7 @@ struct TipJarView: View {
                             
                             if let message = vm.message {
                                 Text(message)
-                                    .font(.myFootnote)
+                                    .font(.myCaption)
                                     .multilineTextAlignment(.center)
                                     .padding(.top, 8)
                             }
@@ -158,3 +161,4 @@ struct TipJarView: View {
         .toolbarBackground(.clear, for: .navigationBar)
     }
 }
+

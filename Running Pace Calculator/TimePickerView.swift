@@ -21,7 +21,8 @@ struct TimePickerView: View {
                     // HOURS
                     VStack(spacing: 4) {
                         Text("h")
-                            .font(.system(size: 13, weight: .regular, design: .rounded))
+                            //.font(.system(size: 13, weight: .regular, design: .rounded))
+                            .font(.myInput)
                             .foregroundStyle(.secondary)
 
                         Picker("", selection: $hrs) {
@@ -36,7 +37,8 @@ struct TimePickerView: View {
                     // MINUTES
                     VStack(spacing: 4) {
                         Text("min")
-                            .font(.system(size: 13, weight: .regular, design: .rounded))
+                            //.font(.system(size: 13, weight: .regular, design: .rounded))
+                            .font(.myInput)
                             .foregroundStyle(.secondary)
 
                         Picker("", selection: $mins) {
@@ -51,7 +53,8 @@ struct TimePickerView: View {
                     // SECONDS
                     VStack(spacing: 4) {
                         Text("s")
-                            .font(.system(size: 13, weight: .regular, design: .rounded))
+                        //.font(.system(size: 13, weight: .regular, design: .rounded))
+                        .font(.myInput)
                             .foregroundStyle(.secondary)
 
                         Picker("", selection: $secs) {
