@@ -81,20 +81,18 @@ struct TipJarView: View {
     
     var body: some View {
         ZStack {
-            // Full green background
-            Color(hue: 120.0 / 360.0, saturation: 0.6, brightness: 0.6)
-                .ignoresSafeArea()
-            
             ScrollView {
                 VStack(spacing: 16) {
                     
                     // TITLE
+                    
+                    
                     Text("Tip Jar")
                         .font(.myTitle)
                         .foregroundColor(.primary)
-                        .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.top, 24)       // MATCHES SETTINGS + CONTENT
+                        .padding(.bottom, 16)
                     
                     
                     // LOADING
@@ -106,7 +104,6 @@ struct TipJarView: View {
                     else if vm.hasTipped, let message = vm.message {
                         Text(message)
                             .font(.myCaption)
-                            .multilineTextAlignment(.center)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top, 8)
                     }
@@ -116,7 +113,7 @@ struct TipJarView: View {
                         if vm.products.isEmpty {
                             Text(vm.message ?? "Tips are not available right now.")
                                 .font(.myCaption)
-                                .multilineTextAlignment(.center)
+                                .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.top, 8)
                         } else {
                             ForEach(vm.products, id: \.id) { product in
@@ -141,7 +138,7 @@ struct TipJarView: View {
                             if let message = vm.message {
                                 Text(message)
                                     .font(.myCaption)
-                                    .multilineTextAlignment(.center)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                                     .padding(.top, 8)
                             }
                         }
@@ -152,13 +149,19 @@ struct TipJarView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 24)    // MATCHES MAIN APP BORDER
-                .padding(.vertical, 10)
+                .padding(.vertical, 20)
             }
         }
+        .background(
+            Color(hue: 120.0/360.0, saturation: 0.6, brightness: 0.6)
+                .ignoresSafeArea()
+        )
         .task {
             await vm.load()
         }
-        .toolbarBackground(.clear, for: .navigationBar)
+        .navigationTitle("")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(false)
     }
 }
 
