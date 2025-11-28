@@ -54,8 +54,8 @@ struct ContentView: View {
                                     .accessibilityHidden(true)
                                     .offset(y: -6)
                             }
-                            .padding(.top, 24)
-                            .padding(.bottom, 8)
+                            .padding(.top, 18)
+                            .padding(.bottom, 0)
 
                             
                             // ---------------------------------------------------

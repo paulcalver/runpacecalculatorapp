@@ -105,7 +105,7 @@ struct TipJarView: View {
                     // SUCCESS MESSAGE
                     else if vm.hasTipped, let message = vm.message {
                         Text(message)
-                            .font(.myCaption)
+                            .font(.myInput)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top, 8)
                     }
