@@ -149,6 +149,24 @@ struct ContentView: View {
                             
                             // MARK: - Splits & Predictions
                             VStack(alignment: .leading, spacing: 8) {
+                                
+                                Text("Predictive Equivalents")
+                                    .font(.myHeadline)
+                                    .padding(.top, 8)
+                                
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("5k – \(vm.predictedEquivalentTime(for: 5))")
+                                    Text("10k – \(vm.predictedEquivalentTime(for: 10))")
+                                    Text("Half Marathon – \(vm.predictedEquivalentTime(for: 21.097))")
+                                    Text("Marathon – \(vm.predictedEquivalentTime(for: 42.195))")
+                                }
+                                .font(.myCaption)
+                                .foregroundStyle(.primary)
+                                Text("Calculated using the Riegel Formula, based on your selected pace and distance combination.")
+                                    .font(.myCaption)
+                                    .foregroundStyle(.secondary)
+                                    .padding(.bottom, 16)
+                                
                                 Text("Splits")
                                     .font(.myHeadline)
                                 
@@ -186,25 +204,10 @@ struct ContentView: View {
                                     .font(.myCaption)
                                 }
                                 
-                                Text("Predictive Equivalents")
-                                    .font(.myHeadline)
-                                    .padding(.top, 8)
-                                
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text("5k – \(vm.predictedEquivalentTime(for: 5))")
-                                    Text("10k – \(vm.predictedEquivalentTime(for: 10))")
-                                    Text("Half Marathon – \(vm.predictedEquivalentTime(for: 21.097))")
-                                    Text("Marathon – \(vm.predictedEquivalentTime(for: 42.195))")
-                                }
-                                .font(.myCaption)
-                                .foregroundStyle(.primary)
-                                Text("Calculated using the Riegel Formula, based on your selected pace and distance combination.")
-                                    .font(.myCaption)
-                                    .foregroundStyle(.secondary)
-                                    //.padding(.top, 8)
+                               
                                 Text("Support the App")
                                     .font(.myHeadline)
-                                    .padding(.top, 8)
+                                    .padding(.top, 20)
                                 Button {
                                     path.append(.settings)
                                 } label: {
