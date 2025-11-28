@@ -1,15 +1,6 @@
 import SwiftUI
-import UIKit
 
 struct ContentView: View {
-    private func setWindowBackgroundToMatchApp() {
-        let uiColor = UIColor(hue: CGFloat(120.0/360.0), saturation: 0.6, brightness: 0.6, alpha: 1.0)
-        UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .forEach { scene in
-                scene.windows.forEach { $0.backgroundColor = uiColor }
-            }
-    }
 
     @StateObject private var vm = PaceViewModel()
     
@@ -35,8 +26,6 @@ struct ContentView: View {
     var body: some View {
         NavigationStack(path: $path) {
             ZStack {
-                Color(hue: 120.0/360.0, saturation: 0.6, brightness: 0.6)
-                    .ignoresSafeArea(.all)
                 
                 // MAIN CONTENT
                 ScrollViewReader { proxy in
@@ -236,14 +225,6 @@ struct ContentView: View {
             }
             
             
-            .background(
-                Color(hue: 120.0/360.0, saturation: 0.6, brightness: 0.6)
-                    .ignoresSafeArea(.all)
-            )
-            .onAppear { setWindowBackgroundToMatchApp() }
-            
-            
-            // NAV DESTINATION
             .navigationDestination(for: Route.self) { route in
                 switch route {
                 case .settings:

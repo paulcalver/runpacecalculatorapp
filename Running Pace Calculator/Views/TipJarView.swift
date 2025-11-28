@@ -152,10 +152,6 @@ struct TipJarView: View {
                 .padding(.vertical, 20)
             }
         }
-        .background(
-            Color(hue: 120.0/360.0, saturation: 0.6, brightness: 0.6)
-                .ignoresSafeArea()
-        )
         .task {
             await vm.load()
         }

@@ -7,36 +7,15 @@
 
 import SwiftUI
 import StoreKit
-import UIKit
 
 @main
 struct PaceCalculatorApp: App {
     // Hook in a UIKit AppDelegate so we can control orientation
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-
-    init() {
-        // Set UIWindow background as early as possible so system snapshots never see white
-        DispatchQueue.main.async {
-            let color = UIColor.appBackground
-            UIApplication.shared.connectedScenes
-                .compactMap { $0 as? UIWindowScene }
-                .forEach { scene in
-                    scene.windows.forEach { window in
-                        window.isOpaque = true
-                        window.clipsToBounds = true
-                        window.backgroundColor = color
-                    }
-                }
-        }
-    }
     
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .background(
-                    Color.appBackground
-                        .ignoresSafeArea(.all)
-                )
                 .onAppear { startStoreKitListener() }
                 .tint(.black)
                 .preferredColorScheme(.light)
@@ -55,43 +34,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        let color = UIColor.appBackground
-        UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .forEach { scene in
-                scene.windows.forEach { window in
-                    window.isOpaque = true
-                    window.clipsToBounds = true
-                    window.backgroundColor = color
-                }
-            }
         return true
-    }
-
-    func applicationWillEnterForeground(_ application: UIApplication) {
-        let color = UIColor.appBackground
-        UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .forEach { scene in
-                scene.windows.forEach { window in
-                    window.isOpaque = true
-                    window.clipsToBounds = true
-                    window.backgroundColor = color
-                }
-            }
-    }
-    
-    func applicationDidBecomeActive(_ application: UIApplication) {
-        let color = UIColor.appBackground
-        UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .forEach { scene in
-                scene.windows.forEach { window in
-                    window.isOpaque = true
-                    window.clipsToBounds = true
-                    window.backgroundColor = color
-                }
-            }
     }
 }
 

@@ -92,10 +92,6 @@ struct InfoView: View {
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(false)
-        .background(
-            Color(hue: 120.0/360.0, saturation: 0.6, brightness: 0.6)
-                .ignoresSafeArea()
-        )
         .sheet(isPresented: $showUnitSheet) {
             VStack(spacing: 16) {
                 Text("Default Metrics")
