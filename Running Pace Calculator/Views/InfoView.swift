@@ -11,6 +11,7 @@ struct InfoView: View {
     
     var body: some View {
         ZStack {
+            Color.appBackgroundColor.ignoresSafeArea()
             ScrollView {
                 VStack(spacing: 16) {
                     
@@ -54,7 +55,7 @@ struct InfoView: View {
                     // Share app row
                     ShareLink(
                         item: appShareURL,
-                        message: Text("Check out Running Pace Calculator – a simple pace & race prediction app.")
+                        message: Text("Check out Running Pace Calculator – A simple pace & race prediction app.")
                     ) {
                         HStack(spacing: 12) {
                             Text("Share with a friend")

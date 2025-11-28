@@ -81,6 +81,8 @@ struct TipJarView: View {
     
     var body: some View {
         ZStack {
+            Color.appBackgroundColor.ignoresSafeArea()
+            
             ScrollView {
                 VStack(spacing: 16) {
                     

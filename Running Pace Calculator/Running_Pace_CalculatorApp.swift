@@ -7,6 +7,7 @@
 
 import SwiftUI
 import StoreKit
+import UIKit
 
 @main
 struct PaceCalculatorApp: App {
@@ -16,6 +17,8 @@ struct PaceCalculatorApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .background(Color.appBackgroundColor)
+                .ignoresSafeArea()
                 .onAppear { startStoreKitListener() }
                 .tint(.black)
                 .preferredColorScheme(.light)

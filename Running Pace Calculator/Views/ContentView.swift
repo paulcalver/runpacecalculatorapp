@@ -26,6 +26,7 @@ struct ContentView: View {
     var body: some View {
         NavigationStack(path: $path) {
             ZStack {
+                Color.appBackgroundColor.ignoresSafeArea()
                 
                 // MAIN CONTENT
                 ScrollViewReader { proxy in
@@ -151,9 +152,9 @@ struct ContentView: View {
                                 }
                                 .font(.myCaption)
                                 .foregroundStyle(.primary)
-                                Text("Calculated using the Riegel Formula, based on your selected pace and distance combination.")
+                                Text("Based on the Riegel formula using your pace and distance. Use this as a quick check: if you can run the predicted times at other distances, you’re on track.")
                                     .font(.myCaption)
-                                    .foregroundStyle(.secondary)
+                                    .foregroundStyle(.primary.opacity(0.5))
                                     .padding(.bottom, 16)
                                 
                                 Text("Splits")
@@ -162,7 +163,7 @@ struct ContentView: View {
                                 if vm.splitRows.isEmpty {
                                     Text("Enter a distance and pace (or time) to see splits.")
                                         .font(.myCaption)
-                                        .foregroundStyle(.secondary)
+                                        .foregroundStyle(.primary.opacity(0.5))
                                 } else {
                                     HStack(alignment: .top, spacing: 40) {
                                         VStack(alignment: .leading, spacing: 4) {
