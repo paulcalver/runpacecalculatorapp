@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		0DA5FFC92ED9FBD300F141D2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = "Running Pace Calculator/LaunchScreen.storyboard"; sourceTree = "<group>"; };
 		0DE8AA9C2ED63FC400566F58 /* Running Pace Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Running Pace Calculator.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0DE8AAC62ED640BB00566F58 /* StoreKit.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; name = StoreKit.storekit; path = "Running Pace Calculator/StoreKit.storekit"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -33,6 +34,7 @@
 		0DE8AA932ED63FC400566F58 = {
 			isa = PBXGroup;
 			children = (
+				0DA5FFC92ED9FBD300F141D2 /* LaunchScreen.storyboard */,
 				0DE8AAC62ED640BB00566F58 /* StoreKit.storekit */,
 				0DE8AA9E2ED63FC400566F58 /* Running Pace Calculator */,
 				0DE8AA9D2ED63FC400566F58 /* Products */,
@@ -265,6 +267,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
@@ -305,6 +308,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
@@ -339,7 +343,7 @@
 				0DE8AAA62ED63FC500566F58 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 		0DE8AAA72ED63FC500566F58 /* Build configuration list for PBXNativeTarget "Running Pace Calculator" */ = {
 			isa = XCConfigurationList;
@@ -348,7 +352,7 @@
 				0DE8AAA92ED63FC500566F58 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
